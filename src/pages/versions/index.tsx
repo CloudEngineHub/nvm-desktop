@@ -103,6 +103,7 @@ export const Versions: React.FC = () => {
 
 	const columns: ColumnDef<Nvmd.Version>[] = useMemo(() => {
 		const { version: latest } = versions[0] || { version: '' };
+		const now = dayjs();
 		return [
 			{
 				accessorKey: 'version',
@@ -126,13 +127,13 @@ export const Versions: React.FC = () => {
 					);
 				},
 				cell: ({ row }) => {
-					const { version, lts } = row.original;
+					const { version, lts, date } = row.original;
 					return (
-						<div className='flex gap-1 items-center'>
+						<div className='relative flex gap-1 items-center'>
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<a
-										className='h-6 p-0 text-md text-foreground font-medium hover:text-primary hover:underline'
+										className='h-6 p-0 leading-6 text-md text-foreground font-medium hover:text-primary hover:underline'
 										href={`https://github.com/nodejs/node/releases/tag/${version}`}
 										target='_blank'
 									>
@@ -149,6 +150,9 @@ export const Versions: React.FC = () => {
 								<span className='text-foreground-foreground'>
 									({t('latest')})
 								</span>
+							) : null}
+							{dayjs(now).diff(date, 'day') <= 3 ? (
+								<span className='inline-block absolute w-1 h-1 top-1 -left-1.5 rounded-full bg-primary' />
 							) : null}
 						</div>
 					);
