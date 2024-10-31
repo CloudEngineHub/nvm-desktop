@@ -1,5 +1,5 @@
 use anyhow::Result;
-use std::path::PathBuf;
+use std::{path::PathBuf, process::Command};
 
 use crate::{
     config::{Config, Group, ISettings, NVersion, Project},
@@ -155,6 +155,19 @@ pub async fn configration_import(
     sync: bool,
 ) -> CmdResult<Option<configration::ConfigrationImport>> {
     wrap_err!(configration::configration_import(&app_handle, sync).await)
+}
+
+/// open project with VsCode
+#[tauri::command]
+pub async fn open_with_vscode(path: String) -> CmdResult<()> {
+    #[cfg(windows)]
+    let cmd: &str = "code.cmd";
+
+    #[cfg(unix)]
+    let cmd = "code";
+
+    wrap_err!(Command::new(cmd).arg(&path).status())?;
+    Ok(())
 }
 
 /// open data dir `.nvmd`

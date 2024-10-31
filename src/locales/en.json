@@ -134,5 +134,6 @@
 	"Invalid-project-path": "Invalid project path",
 	"Error-500": "Sorry, something went wrong.",
 	"Unzipping": "Unzipping",
-	"Set-as-default": "Set as the default version"
+	"Set-as-default": "Set as the default version",
+	"open-with-vscode": "Open with VsCode"
 }

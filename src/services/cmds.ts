@@ -180,6 +180,15 @@ export function configrationImport(sync: boolean = false) {
 }
 
 /**
+ * @description: Open project with VsCode.
+ * @param {string} path
+ * @returns {Promise<void>}
+ */
+export function openWithVSCode(path: string) {
+	return invoke<void>('open_with_vscode', { path });
+}
+
+/**
  * @description: Open dir with the File Explorer.
  * @param {string} dir
  * @returns {Promise<void>}

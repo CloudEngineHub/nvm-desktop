@@ -61,6 +61,7 @@ fn main() -> tauri::Result<()> {
             cmds::sync_project_version,
             cmds::batch_update_project_version,
 						cmds::open_dir,
+						cmds::open_with_vscode,
             // groups
             cmds::group_list,
             cmds::update_groups,
