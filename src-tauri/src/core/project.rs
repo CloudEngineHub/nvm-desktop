@@ -62,7 +62,10 @@ pub async fn select_projects(app_handle: tauri::AppHandle) -> Result<Option<Vec<
 /// update projects
 pub async fn update_projects(list: Vec<Project>, path: Option<PathBuf>) -> Result<()> {
     if let Some(path) = path {
-        tokio::fs::remove_file(&path.join(".nvmdrc")).await?;
+        let nvmdrc = path.join(".nvmdrc");
+        if nvmdrc.exists() {
+            tokio::fs::remove_file(nvmdrc).await?;
+        }
     }
 
     Config::projects().draft().update_list(&list)?;

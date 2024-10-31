@@ -161,7 +161,7 @@ pub async fn configration_import(
 #[tauri::command]
 pub async fn open_with_vscode(path: String) -> CmdResult<()> {
     #[cfg(windows)]
-    let cmd: &str = "code.cmd";
+    let cmd = "code.cmd";
 
     #[cfg(unix)]
     let cmd = "code";
