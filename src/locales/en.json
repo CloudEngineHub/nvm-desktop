@@ -135,5 +135,6 @@
 	"Error-500": "Sorry, something went wrong.",
 	"Unzipping": "Unzipping",
 	"Set-as-default": "Set as the default version",
-	"open-with-vscode": "Open with VsCode"
+	"open-with-vscode": "Open with VsCode",
+	"VSCode-code-command-not-found": "VSCode 'code' command not found"
 }

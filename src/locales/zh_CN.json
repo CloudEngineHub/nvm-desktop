@@ -135,5 +135,6 @@
 	"Error-500": "抱歉，出了点问题。",
 	"Unzipping": "解压中",
 	"Set-as-default": "设置为默认版本",
-	"open-with-vscode": "使用 VsCode 打开"
+	"open-with-vscode": "使用 VsCode 打开",
+  "VSCode-code-command-not-found": "未找到 VSCode 的‘code’命令"
 }
