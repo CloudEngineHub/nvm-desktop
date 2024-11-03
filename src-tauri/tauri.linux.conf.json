@@ -3,7 +3,7 @@
   "app": {
     "trayIcon": {
       "id": "main",
-      "iconPath": "icons/icon.png"
+      "iconPath": "icons/icon.ico"
     }
   },
   "bundle": {
