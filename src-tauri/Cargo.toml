@@ -5,7 +5,7 @@ description = "Node Version Manager Desktop - A desktop application to manage mu
 authors = ["The1111mp@outlook.com"]
 license = "GPL-3.0-only"
 repository = "https://github.com/1111mp/nvm-desktop.git"
-default-run = "clash-verge"
+default-run = "nvm-desktop"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
