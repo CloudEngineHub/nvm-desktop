@@ -1,5 +1,6 @@
 use anyhow::Result;
-use tauri::{App, AppHandle, Manager};
+use tauri::{App, Manager};
+use tauri_plugin_window_state::{StateFlags, WindowExt};
 
 use crate::{
     config::Config,
@@ -9,34 +10,35 @@ use crate::{
 };
 
 /// handle something when start app
-pub fn resolve_setup(app: &mut App) -> Result<()> {
+pub async fn resolve_setup(app: &mut App) {
     #[cfg(target_os = "macos")]
     app.set_activation_policy(tauri::ActivationPolicy::Regular);
 
-    handle::Handle::global().init(app.app_handle().clone());
+    handle::Handle::global().init(app.app_handle());
 
-    log_err!(migrate::init());
-    log_err!(tray::Tray::update_systray(&app.app_handle()));
+    log_err!(migrate::init().await);
+    log_err!(tray::Tray::create_systray());
 
     let silent_start = { Config::settings().data().enable_silent_start };
     if !silent_start.unwrap_or(false) {
-        create_window(&app.app_handle())?;
+        log_err!(create_window());
     }
-		
-    Ok(())
+
+    log_err!(handle::Handle::update_systray_part());
 }
 
 /// create main window
-pub fn create_window(app_handle: &AppHandle) -> Result<()> {
-    if let Some(window) = app_handle.get_webview_window("main") {
-        trace_err!(window.unminimize(), "set win unminimize");
+pub fn create_window() -> Result<()> {
+    let app_handle = handle::Handle::global().app_handle().unwrap();
+
+    if let Some(window) = handle::Handle::global().get_window() {
         trace_err!(window.show(), "set win visible");
         trace_err!(window.set_focus(), "set win focus");
         return Ok(());
     }
 
     let builder = tauri::WebviewWindowBuilder::new(
-        app_handle,
+        &app_handle,
         "main",
         tauri::WebviewUrl::App("index.html".into()),
     )
@@ -68,6 +70,8 @@ pub fn create_window(app_handle: &AppHandle) -> Result<()> {
     if tauri::is_dev() {
         window.open_devtools();
     }
+
+    let _ = window.restore_state(StateFlags::all());
 
     Ok(())
 }

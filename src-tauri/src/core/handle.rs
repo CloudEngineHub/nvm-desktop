@@ -1,13 +1,13 @@
 use super::tray::Tray;
-use anyhow::{bail, Result};
+use anyhow::Result;
 use once_cell::sync::OnceCell;
-use parking_lot::Mutex;
+use parking_lot::RwLock;
 use std::sync::Arc;
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager, WebviewWindow};
 
 #[derive(Debug, Default, Clone)]
 pub struct Handle {
-    pub app_handle: Arc<Mutex<Option<AppHandle>>>,
+    pub app_handle: Arc<RwLock<Option<AppHandle>>>,
 }
 
 impl Handle {
@@ -15,40 +15,37 @@ impl Handle {
         static HANDLE: OnceCell<Handle> = OnceCell::new();
 
         HANDLE.get_or_init(|| Handle {
-            app_handle: Arc::new(Mutex::new(None)),
+            app_handle: Arc::new(RwLock::new(None)),
         })
     }
 
-    pub fn init(&self, app_handle: AppHandle) {
-        *self.app_handle.lock() = Some(app_handle);
+    pub fn init(&self, app_handle: &AppHandle) {
+        let mut handle = self.app_handle.write();
+        *handle = Some(app_handle.clone());
     }
 
-    pub fn update_systray() -> Result<()> {
-        let app_handle = Self::global().app_handle.lock();
-        if app_handle.is_none() {
-            bail!("update_systray unhandled error");
+    pub fn app_handle(&self) -> Option<AppHandle> {
+        self.app_handle.read().clone()
+    }
+
+    pub fn get_window(&self) -> Option<WebviewWindow> {
+        let app_handle = self.app_handle().unwrap();
+        let window: Option<WebviewWindow> = app_handle.get_webview_window("main");
+        if window.is_none() {
+            log::debug!(target:"app", "main window not found");
         }
-        Tray::update_systray(app_handle.as_ref().unwrap())?;
-        Ok(())
+        window
     }
 
     /// update the system tray state
     pub fn update_systray_part() -> Result<()> {
-        let app_handle = Self::global().app_handle.lock();
-        if app_handle.is_none() {
-            bail!("update_systray unhandled error");
-        }
-        Tray::update_part(app_handle.as_ref().unwrap())?;
+        Tray::update_part()?;
         Ok(())
     }
 
     /// update the system tray state & emit event
     pub fn update_systray_part_with_emit(event: &str, version: &str) -> Result<()> {
-        let app_handle = Self::global().app_handle.lock();
-        if app_handle.is_none() {
-            bail!("update_systray unhandled error");
-        }
-        Tray::update_part_with_emit(app_handle.as_ref().unwrap(), event, version)?;
+        Tray::update_part_with_emit(event, version)?;
         Ok(())
     }
 }

@@ -14,6 +14,8 @@ use tauri::{
     AppHandle, Emitter, Manager, Wry,
 };
 
+use super::handle;
+
 pub struct Tray {}
 
 fn gen_check_menu_items(
@@ -36,7 +38,7 @@ fn gen_check_menu_items(
 }
 
 impl Tray {
-    pub fn tray_menu(app_handle: &AppHandle) -> Result<Menu<Wry>> {
+    pub fn create_tray_menu(app_handle: &AppHandle) -> Result<Menu<Wry>> {
         let package_info = app_handle.package_info();
         let version = package_info.version.to_string();
         let app_name: String = package_info.name.to_string();
@@ -153,17 +155,17 @@ impl Tray {
             .build()?)
     }
 
-    pub fn update_systray(app_handle: &AppHandle) -> Result<()> {
+    pub fn create_systray() -> Result<()> {
+        let app_handle = handle::Handle::global().app_handle().unwrap();
         if let Some(tray) = app_handle.tray_by_id("main") {
-            tray.set_menu(Some(Tray::tray_menu(app_handle)?))?;
-            tray.on_tray_icon_event(|tray, event| {
+            tray.on_tray_icon_event(|_, event| {
                 #[cfg(not(target_os = "macos"))]
                 if let TrayIconEvent::Click {
                     button: MouseButton::Left,
                     ..
                 } = event
                 {
-                    let _ = resolve::create_window(&tray.app_handle());
+                    let _ = resolve::create_window();
                 }
             });
             tray.on_menu_event(Tray::on_menu_event);
@@ -172,19 +174,21 @@ impl Tray {
         Ok(())
     }
 
-    pub fn update_part(app_handle: &AppHandle) -> Result<()> {
+    pub fn update_part() -> Result<()> {
+        let app_handle = handle::Handle::global().app_handle().unwrap();
         if let Some(tray) = app_handle.tray_by_id("main") {
-            tray.set_menu(Some(Tray::tray_menu(app_handle)?))?;
+            let _ = tray.set_menu(Some(Tray::create_tray_menu(&app_handle)?));
             Ok(())
         } else {
             bail!("The system tray menu has not been initialized")
         }
     }
 
-    pub fn update_part_with_emit(app_handle: &AppHandle, event: &str, version: &str) -> Result<()> {
+    pub fn update_part_with_emit(event: &str, version: &str) -> Result<()> {
+        let app_handle = handle::Handle::global().app_handle().unwrap();
         if let Some(tray) = app_handle.tray_by_id("main") {
-            tray.set_menu(Some(Tray::tray_menu(app_handle)?))?;
-            if let Some(window) = app_handle.get_webview_window("main") {
+            let _ = tray.set_menu(Some(Tray::create_tray_menu(&app_handle)?));
+            if let Some(window) = handle::Handle::global().get_window() {
                 window.emit(event, version)?;
             }
             Ok(())
@@ -196,7 +200,7 @@ impl Tray {
     pub fn on_menu_event(app_handle: &AppHandle, event: MenuEvent) {
         match event.id().as_ref() {
             "open_window" => {
-                let _ = resolve::create_window(app_handle);
+                let _ = resolve::create_window();
             }
             "quit" => cmds::exit_app(app_handle.clone()),
             "open_data_dir" => crate::log_err!(cmds::open_data_dir()),

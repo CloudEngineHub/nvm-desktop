@@ -20,7 +20,6 @@ export default function App({
 		// open main webview window
 		setTimeout(() => {
 			const webviewWindow = getCurrent();
-			webviewWindow.unminimize();
 			webviewWindow.show();
 			webviewWindow.setFocus();
 		});

@@ -65,22 +65,24 @@ pub fn default_install_dir() -> PathBuf {
 
 /// get the resources dir
 pub fn app_resources_dir() -> Result<PathBuf> {
-    let handle = handle::Handle::global();
-    let app_handle = handle.app_handle.lock();
-    if let Some(app_handle) = app_handle.as_ref() {
-        let res_dir = app_handle.path().resource_dir()?.join("resources");
-        return Ok(res_dir);
+    let app_handle = handle::Handle::global().app_handle().unwrap();
+    match app_handle.path().resource_dir() {
+        Ok(dir) => Ok(dir.join("resources")),
+        Err(e) => {
+            log::error!(target:"app", "Failed to get the resource directory: {}", e);
+            Err(anyhow::anyhow!("Failed to get the resource directory"))
+        }
     }
-    Err(anyhow::anyhow!("failed to get the resource dir"))
 }
 
 /// get the logs dir
 pub fn app_logs_dir() -> Result<PathBuf> {
-    let handle = handle::Handle::global();
-    let app_handle = handle.app_handle.lock();
-    if let Some(app_handle) = app_handle.as_ref() {
-        let res_dir = app_handle.path().app_log_dir()?;
-        return Ok(res_dir);
+    let app_handle = handle::Handle::global().app_handle().unwrap();
+    match app_handle.path().app_log_dir() {
+        Ok(dir) => Ok(dir),
+        Err(e) => {
+            log::error!(target:"app", "Failed to get the logs directory: {}", e);
+            Err(anyhow::anyhow!("Failed to get the logs directory"))
+        }
     }
-    Err(anyhow::anyhow!("failed to get the logs dir"))
 }

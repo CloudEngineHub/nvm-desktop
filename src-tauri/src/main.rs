@@ -8,29 +8,16 @@ mod utils;
 
 use config::Config;
 use tauri::Manager;
-use tauri_plugin_log::{Target, TargetKind};
+use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 use utils::resolve;
 
 fn main() -> tauri::Result<()> {
     #[cfg(target_os = "linux")]
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
 
-    let builder = tauri::Builder::default()
-        .setup(|app| {
-            resolve::resolve_setup(app)?;
-            Ok(())
-        })
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_updater::Builder::default().build())
-        .plugin(
-            tauri_plugin_log::Builder::default()
-                .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepAll)
-                .targets([
-                    Target::new(TargetKind::Stdout),
-                    Target::new(TargetKind::LogDir { file_name: None }),
-                    // Target::new(TargetKind::Webview),
-                ])
-                .build(),
-        )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         // Ensure single instance operation
@@ -42,6 +29,13 @@ fn main() -> tauri::Result<()> {
                 }
             },
         ))
+        .setup(|app| {
+            tauri::async_runtime::block_on(async move {
+                resolve::resolve_setup(app).await;
+            });
+
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             // settings
             cmds::read_settings,
@@ -60,8 +54,8 @@ fn main() -> tauri::Result<()> {
             cmds::update_projects,
             cmds::sync_project_version,
             cmds::batch_update_project_version,
-						cmds::open_dir,
-						cmds::open_with_vscode,
+            cmds::open_dir,
+            cmds::open_with_vscode,
             // groups
             cmds::group_list,
             cmds::update_groups,
@@ -72,6 +66,28 @@ fn main() -> tauri::Result<()> {
             // app
             cmds::restart,
         ]);
+
+    #[cfg(debug_assertions)]
+    {
+        let devtools = tauri_plugin_devtools::init();
+        builder = builder.plugin(devtools);
+    }
+
+    #[cfg(not(debug_assertions))]
+    {
+        use tauri_plugin_log::{Builder, Target, TargetKind};
+
+        let log_plugin = Builder::default()
+            .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepAll)
+            .targets([
+                Target::new(TargetKind::Stdout),
+                Target::new(TargetKind::LogDir { file_name: None }),
+                // Target::new(TargetKind::Webview),
+            ])
+            .build();
+
+        builder = builder.plugin(log_plugin);
+    }
 
     let app = builder.build(tauri::generate_context!())?;
 
@@ -84,16 +100,20 @@ fn main() -> tauri::Result<()> {
 
             if closer == "minimize" {
                 api.prevent_exit();
+                return;
             }
+
+            let _ = app_handle.save_window_state(StateFlags::default());
         }
         tauri::RunEvent::WindowEvent { label, event, .. } => {
             if label == "main" {
                 match event {
-                    tauri::WindowEvent::Destroyed => {
-                        // Destroyed Event
-                    }
                     tauri::WindowEvent::CloseRequested { api, .. } => {
                         // CloseRequested Event
+                        api.prevent_close();
+                        if let Some(window) = core::handle::Handle::global().get_window() {
+                            log_err!(window.hide());
+                        }
                     }
                     _ => {}
                 }
