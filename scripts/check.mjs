@@ -8,6 +8,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 import fetch from 'node-fetch';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import { execSync } from 'node:child_process';
 
 const cwd = process.cwd();
 const TEMP_DIR = path.join(cwd, 'node_modules/.nvmd');
@@ -113,7 +114,7 @@ async function downlloadEnvPath(targetPath) {
 	if (!(await fs.pathExists(tempExe))) {
 		await downloadFile(downloadURL, tempExe);
 	}
-	
+
 	await fs.rename(tempExe, targetPath);
 
 	console.log(`[INFO]: "envpath.exe" move finished`);
@@ -143,6 +144,12 @@ async function run() {
 
 		await fs.rename(tempfile, targetPath);
 		console.log(`[INFO]: "${name}" rename finished`);
+
+		/// unix
+		if (platform !== 'win32') {
+			execSync(`chmod 755 ${targetPath}`);
+			console.log(`[INFO]: chmod binary finished: ${file}`);
+		}
 
 		if (platform === 'win32') {
 			await Promise.all([
