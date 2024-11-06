@@ -1,25 +1,25 @@
-use anyhow::Result;
-use std::time::Duration;
-use tauri::{Emitter, Manager};
-use tokio::fs;
-use tokio::time::sleep;
-
 use super::{dirs, help};
 use crate::core::handle;
+
+use anyhow::Result;
+use tauri::Emitter;
+use tokio::fs;
+use tokio::time::{sleep, Duration};
 
 const CURRENT_MIGRATION_VERSION: i16 = 17;
 const NODE_DEFAULT_EXECUTE: [&str; 4] = ["node", "npm", "npx", "corepack"];
 
-pub async fn init() -> Result<()> {
-    if let Err(err) = update_schema().await {
-        log::error!(target: "migrate", "{err}");
+pub fn init() -> Result<()> {
+    tauri::async_runtime::spawn(async {
+        if let Err(err) = update_schema().await {
+            log::error!(target: "migrate", "{err}");
+        }
         // Delay 1s before sending events to the window
         sleep(Duration::from_secs(1)).await;
-
         if let Some(window) = handle::Handle::global().get_window() {
             let _ = window.emit("app-migration-error", ());
         }
-    }
+    });
 
     Ok(())
 }

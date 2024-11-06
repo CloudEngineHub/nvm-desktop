@@ -16,7 +16,7 @@ pub async fn resolve_setup(app: &mut App) {
 
     handle::Handle::global().init(app.app_handle());
 
-    log_err!(migrate::init().await);
+    log_err!(migrate::init());
     log_err!(tray::Tray::create_systray());
 
     let silent_start = { Config::settings().data().enable_silent_start };
