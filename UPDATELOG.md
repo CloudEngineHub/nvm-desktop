@@ -1,3 +1,19 @@
+## v4.0.3
+
+### Features
+
+- versions released in the past three days are marked with dots
+- open the project using vscode [#135](https://github.com/1111mp/nvm-desktop/issues/135)
+
+### Bug Fixes
+
+- the interface cannot be interacted with [#124](https://github.com/1111mp/nvm-desktop/issues/124)
+- can't add shortcuts on linux [#137](https://github.com/1111mp/nvm-desktop/issues/137)
+- chmod nvmd binary [#138](https://github.com/1111mp/nvm-desktop/issues/138)
+- removing a project fails when the .nvmdrc file does not exist under the project [#136](https://github.com/1111mp/nvm-desktop/issues/136)
+
+---
+
 ## v4.0.2
 
 ### Features
@@ -11,6 +27,8 @@
 - `font-family` adapted to different platforms
 - `nvmd use {version} --project` throws an error when `".nvmd/projects.json"` does not exist [#130](https://github.com/1111mp/nvm-desktop/issues/130)
 - give more friendly error messages [#128](https://github.com/1111mp/nvm-desktop/issues/128)
+
+---
 
 ## v4.0.1
 

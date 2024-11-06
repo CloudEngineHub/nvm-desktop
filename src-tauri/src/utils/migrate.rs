@@ -7,7 +7,7 @@ use tokio::time::sleep;
 use super::{dirs, help};
 use crate::core::handle;
 
-const CURRENT_MIGRATION_VERSION: i16 = 16;
+const CURRENT_MIGRATION_VERSION: i16 = 17;
 const NODE_DEFAULT_EXECUTE: [&str; 4] = ["node", "npm", "npx", "corepack"];
 
 pub async fn init() -> Result<()> {
