@@ -75,7 +75,7 @@ fn main() -> tauri::Result<()> {
 
     #[cfg(not(debug_assertions))]
     {
-        use tauri_plugin_log::{Builder, Target, TargetKind};
+        use tauri_plugin_log::{Builder, Target, TargetKind, TimezoneStrategy};
 
         let log_plugin = Builder::default()
             .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepAll)
@@ -84,6 +84,12 @@ fn main() -> tauri::Result<()> {
                 Target::new(TargetKind::LogDir { file_name: None }),
                 // Target::new(TargetKind::Webview),
             ])
+            .timezone_strategy(TimezoneStrategy::UseLocal)
+            .level(log::LevelFilter::Info)
+            .filter(|metadata| {
+                let target = metadata.target();
+                target == "app" || target == "migrate"
+            })
             .build();
 
         builder = builder.plugin(log_plugin);
