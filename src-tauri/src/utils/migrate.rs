@@ -13,11 +13,12 @@ pub fn init() -> Result<()> {
     tauri::async_runtime::spawn(async {
         if let Err(err) = update_schema().await {
             log::error!(target: "migrate", "{err}");
-        }
-        // Delay 1s before sending events to the window
-        sleep(Duration::from_secs(1)).await;
-        if let Some(window) = handle::Handle::global().get_window() {
-            let _ = window.emit("app-migration-error", ());
+
+            // Delay 1s before sending events to the window
+            sleep(Duration::from_secs(1)).await;
+            if let Some(window) = handle::Handle::global().get_window() {
+                let _ = window.emit("app-migration-error", ());
+            }
         }
     });
 
