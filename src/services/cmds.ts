@@ -74,11 +74,10 @@ export function installNodeCancel() {
 /**
  * @description	uninstall node
  * @param {string} version version number
- * @param {boolean} current whether the version to be uninstalled is the currently used version
  * @returns {Promise<void>} Promise<void>
  */
-export function uninstallNode(version: string, current: boolean = false) {
-	return invoke<void>('uninstall_node', { version, current });
+export function uninstallNode(version: string) {
+	return invoke<void>('uninstall_node', { version });
 }
 
 /**

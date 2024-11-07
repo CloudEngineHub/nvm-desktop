@@ -230,35 +230,16 @@ pub async fn install_node_cancel() -> Result<()> {
 }
 
 /// uninstall node
-pub async fn uninstall_node(version: String, current: Option<bool>) -> Result<()> {
+pub async fn uninstall_node(version: String) -> Result<()> {
     let directory = Config::settings().latest().get_directory();
     if let Some(directory) = directory {
-        let current = current.unwrap_or(false);
         let directory = PathBuf::from(directory).join(&version);
-
-        let remove_version = async {
-            tokio::fs::remove_dir_all(&directory).await.context(format!(
+        tokio::fs::remove_dir_all(&directory)
+            .await
+            .context(format!(
                 "Failed to remove version directory: {:?}",
                 directory
-            ))
-        };
-        let remove_current = async {
-            if current {
-                let default_path = dirs::default_version_path()?;
-                tokio::fs::remove_dir_all(&default_path)
-                    .await
-                    .context(format!(
-                        "Failed to remove the default file: {:?}",
-                        default_path
-                    ))
-            } else {
-                Ok(())
-            }
-        };
-
-        let (r_version, r_current) = tokio::join!(remove_version, remove_current);
-        r_version?;
-        r_current?;
+            ))?;
     }
 
     Ok(())

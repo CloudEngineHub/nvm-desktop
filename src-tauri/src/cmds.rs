@@ -80,13 +80,13 @@ pub async fn install_node_cancel() -> CmdResult<()> {
 
 /// uninstall node
 #[tauri::command]
-pub async fn uninstall_node(version: Option<String>, current: Option<bool>) -> CmdResult<()> {
+pub async fn uninstall_node(version: Option<String>) -> CmdResult<()> {
     if version.is_none() {
         ret_err!("version should not be null");
     }
 
     let version = version.unwrap();
-    wrap_err!(node::uninstall_node(version, current).await)
+    wrap_err!(node::uninstall_node(version).await)
 }
 
 /// get project list

@@ -286,10 +286,7 @@ export const Versions: React.FC = () => {
 										className='flex gap-2 text-red-600 focus:text-red-500 cursor-pointer'
 										onSelect={async () => {
 											try {
-												await uninstallNode(
-													version.slice(1),
-													version.includes(current)
-												);
+												await uninstallNode(version.slice(1));
 												const [currentVersion, versions] = await Promise.all([
 													vCurrent(),
 													installedList(true),
