@@ -1,6 +1,6 @@
 use anyhow::Result;
 use tauri::{App, Manager};
-// use tauri_plugin_window_state::{StateFlags, WindowExt};
+use tauri_plugin_window_state::{StateFlags, WindowExt};
 
 use crate::{
     config::Config,
@@ -71,7 +71,7 @@ pub fn create_window() -> Result<()> {
         window.open_devtools();
     }
 
-    // let _ = window.restore_state(StateFlags::all());
+    let _ = window.restore_state(StateFlags::all());
 
     Ok(())
 }

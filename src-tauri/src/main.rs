@@ -8,7 +8,7 @@ mod utils;
 
 use config::Config;
 use tauri::Manager;
-// use tauri_plugin_window_state::{AppHandleExt, StateFlags};
+use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 use utils::resolve;
 
 fn main() -> tauri::Result<()> {
@@ -16,7 +16,7 @@ fn main() -> tauri::Result<()> {
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
 
     let mut builder = tauri::Builder::default()
-        // .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_updater::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
@@ -109,7 +109,7 @@ fn main() -> tauri::Result<()> {
                 return;
             }
 
-            // let _ = app_handle.save_window_state(StateFlags::default());
+            let _ = app_handle.save_window_state(StateFlags::default());
         }
         tauri::RunEvent::WindowEvent { label, event, .. } => {
             if label == "main" {
