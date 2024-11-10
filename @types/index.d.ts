@@ -59,6 +59,7 @@ declare global {
 
 		interface Setting {
 			closer: Closer;
+			coder: string;
 			directory: string;
 			enable_silent_start?: boolean;
 			locale: string;

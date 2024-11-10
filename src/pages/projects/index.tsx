@@ -156,7 +156,7 @@ export const Component: React.FC = () => {
                       try {
                         await openWithVSCode(path);
                       } catch {
-                        toast.warning(t('VSCode-code-command-not-found'));
+                        toast.error(t('VSCode-code-command-not-found'));
                       }
                     }}
                   />

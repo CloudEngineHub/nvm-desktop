@@ -55,6 +55,7 @@ const formSchema = z.object({
   locale: z.string(),
   theme: z.nativeEnum(Themes),
   closer: z.nativeEnum(Closer),
+  coder: z.string(),
   directory: z.string().min(1),
   mirror: z.string().url({ message: 'Invalid mirror url' }),
   proxy: z
@@ -117,6 +118,7 @@ const Setting: React.FC<Props> = memo(() => {
       locale: newLocale,
       theme: newTheme,
       closer: newCloser,
+      coder: newCoder,
       directory: newDirectory,
       mirror: newMirror,
       proxy: newProxy,
@@ -125,6 +127,7 @@ const Setting: React.FC<Props> = memo(() => {
       settings.locale === newLocale &&
       settings.theme === newTheme &&
       settings.closer === newCloser &&
+      settings.coder === newCoder &&
       settings.directory === newDirectory &&
       settings.mirror === newMirror &&
       compareObject(settings.proxy, newProxy)
@@ -153,6 +156,7 @@ const Setting: React.FC<Props> = memo(() => {
         locale: newLocale,
         theme: newTheme,
         closer: newCloser,
+        coder: newCoder,
         directory: newDirectory,
         mirror: newMirror,
         proxy: newProxy,
@@ -181,7 +185,7 @@ const Setting: React.FC<Props> = memo(() => {
           icon={<GearIcon />}
         />
       </SheetTrigger>
-      <SheetContent className='flex flex-col'>
+      <SheetContent className='flex flex-col [overflow-y:overlay]'>
         <SheetHeader>
           <SheetTitle>{t('Setting')}</SheetTitle>
           <SheetDescription></SheetDescription>
@@ -301,6 +305,29 @@ const Setting: React.FC<Props> = memo(() => {
                         </FormLabel>
                       </FormItem>
                     </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='coder'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='flex items-center gap-1 text-muted-foreground'>
+                    {t('VSCode-Code-Command')}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoCircledIcon className='text-primary cursor-pointer' />
+                      </TooltipTrigger>
+                      <TooltipContent className='w-96 text-accent-foreground bg-accent'>
+                        {t('VSCode-Code-Command-tip')}
+                      </TooltipContent>
+                    </Tooltip>
+                  </FormLabel>
+                  <FormControl>
+                    <Input className='h-8' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

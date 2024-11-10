@@ -297,13 +297,12 @@ const ConfigrationImport = forwardRef<Importer, {}>(({}, ref) => {
 			const data = await configrationImport(sync);
 			if (!data) return;
 
-			console.log(data);
 			const { color, mirrors, setting } = data;
-			toast.success(t('Configration-import-success'), { duration: 5000 });
 			color && setColor(color);
 			mirrors && localStorage.setItem('nvmd-mirror', mirrors);
 			setting && onUpdateSetting(setting);
 			setOpen(false);
+			toast.success(t('Configration-import-success'), { duration: 5000 });
 		} catch (err) {
 			toast.error(err?.message || err.toString());
 		}

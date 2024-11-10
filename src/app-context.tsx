@@ -125,17 +125,10 @@ export function AppProvider({
 
 			dispatch({
 				type: Actions.UpdateSetting,
-				payload: { ...settings, ...setting },
+				payload: { ...setting },
 			});
 		},
-		[
-			settings.locale,
-			settings.theme,
-			settings.closer,
-			settings.directory,
-			settings.mirror,
-			settings.proxy,
-		]
+		[]
 	);
 
 	const setColorHandler = useMemo(

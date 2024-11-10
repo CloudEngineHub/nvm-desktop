@@ -160,12 +160,7 @@ pub async fn configration_import(
 /// open project with VsCode
 #[tauri::command]
 pub async fn open_with_vscode(path: String) -> CmdResult<()> {
-    #[cfg(windows)]
-    let cmd = "code.cmd";
-
-    #[cfg(unix)]
-    let cmd = "code";
-
+    let cmd = { Config::settings().latest().coder.clone() }.unwrap();
     wrap_err!(Command::new(cmd).arg(&path).status())?;
     Ok(())
 }

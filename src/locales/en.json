@@ -136,5 +136,7 @@
 	"Unzipping": "Unzipping",
 	"Set-as-default": "Set as the default version",
 	"open-with-vscode": "Open with VsCode",
+	"VSCode-Code-Command": "VSCode Code Command",
+	"VSCode-Code-Command-tip": "In most cases the default value of 'code' is sufficient. However, on MacOS you must fill in the full path, for example: '/usr/local/bin/code' ( you can get it by running 'where code' )",
 	"VSCode-code-command-not-found": "VSCode 'code' command not found"
 }

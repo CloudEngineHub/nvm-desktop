@@ -10,6 +10,11 @@ pub struct ISettings {
     /// value: `minimize` or `close`
     pub closer: Option<String>,
 
+    /// open the project file using the code editor
+    /// designed by default for VSCode's 'code' command
+    #[serde(default = "default_coder")]
+    pub coder: Option<String>,
+
     /// installation directory
     pub directory: Option<String>,
 
@@ -36,6 +41,10 @@ pub struct ISettings {
     pub theme: Option<String>,
 }
 
+fn default_coder() -> Option<String> {
+    Some("code".to_string())
+}
+
 impl ISettings {
     pub fn new() -> Self {
         match dirs::settings_path().and_then(|path| help::read_json::<Self>(&path)) {
@@ -50,6 +59,8 @@ impl ISettings {
     /// return the default settings config
     pub fn template() -> Self {
         Self {
+            closer: Some("minimize".into()),
+            coder: Some("code".into()),
             directory: Some(dirs::default_install_dir().to_string_lossy().to_string()),
             enable_silent_start: Some(false),
             locale: Some("en".into()),
@@ -107,6 +118,7 @@ impl ISettings {
         }
 
         patch!(closer);
+        patch!(coder);
         patch!(directory);
         patch!(enable_silent_start);
         patch!(locale);
