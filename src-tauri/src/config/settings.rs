@@ -41,6 +41,12 @@ pub struct ISettings {
     pub theme: Option<String>,
 }
 
+#[cfg(windows)]
+fn default_coder() -> Option<String> {
+    Some("code.cmd".to_string())
+}
+
+#[cfg(unix)]
 fn default_coder() -> Option<String> {
     Some("code".to_string())
 }
@@ -60,7 +66,7 @@ impl ISettings {
     pub fn template() -> Self {
         Self {
             closer: Some("minimize".into()),
-            coder: Some("code".into()),
+            coder: default_coder(),
             directory: Some(dirs::default_install_dir().to_string_lossy().to_string()),
             enable_silent_start: Some(false),
             locale: Some("en".into()),
