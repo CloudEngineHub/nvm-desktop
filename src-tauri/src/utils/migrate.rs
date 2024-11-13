@@ -26,13 +26,10 @@ pub fn init() -> Result<()> {
 }
 
 async fn update_schema() -> Result<()> {
-    let schema_version = match get_schema_version() {
-        Ok(version) => version,
-        Err(err) => {
-            log::error!(target: "migrate", "{err}");
-            0 // treat error as version 0
-        }
-    };
+    let schema_version = get_schema_version().unwrap_or_else(|err| {
+        log::error!(target: "migrate", "{err}");
+        0 // treat error as version 0
+    });
 
     if schema_version < CURRENT_MIGRATION_VERSION {
         if schema_version == 0 {

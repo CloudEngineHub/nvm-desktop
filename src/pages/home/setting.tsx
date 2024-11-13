@@ -99,7 +99,7 @@ const Setting: React.FC<Props> = memo(() => {
     return optStr ? optStr.split('__') : [];
   });
 
-  const { settings, onUpdateSetting } = useAppContext();
+  const { settings, updateSetting } = useAppContext();
   const defaultSettings = {
     ...settings,
     proxy: settings.proxy || { enabled: false, ip: '', port: '' },
@@ -152,7 +152,7 @@ const Setting: React.FC<Props> = memo(() => {
     }
 
     try {
-      await onUpdateSetting({
+      await updateSetting({
         locale: newLocale,
         theme: newTheme,
         closer: newCloser,

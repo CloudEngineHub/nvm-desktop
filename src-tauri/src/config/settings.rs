@@ -97,21 +97,6 @@ impl ISettings {
         self.directory.clone()
     }
 
-    /// get the value of `mirror`
-    pub fn get_mirror(&self) -> Option<String> {
-        self.mirror.clone()
-    }
-
-    // get the value of `proxy`
-    pub fn get_proxy(&self) -> Option<Proxy> {
-        self.proxy.clone()
-    }
-
-    // get the value of `no_proxy`
-    pub fn get_no_proxy(&self) -> Option<bool> {
-        self.no_proxy.clone()
-    }
-
     /// update settings config
     /// save to file
     pub fn patch_settings(&mut self, patch: ISettings) -> Result<()> {

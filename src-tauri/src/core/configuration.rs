@@ -1,5 +1,9 @@
 use super::{handle, project::sync_project_version};
-use crate::{config::{Config, Group, ISettings, Project}, log_err};
+use crate::{
+    config::{Config, Group, ISettings, Project},
+    log_err,
+    utils::help::{async_read_json, async_save_json},
+};
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -7,7 +11,7 @@ use tauri::{Emitter, Manager};
 use tauri_plugin_dialog::{DialogExt, FilePath};
 
 #[derive(Default, Debug, Deserialize, Serialize)]
-pub struct ConfigrationExport {
+pub struct ConfigurationExport {
     /// theme color
     color: Option<String>,
 
@@ -22,7 +26,7 @@ pub struct ConfigrationExport {
 }
 
 #[derive(Default, Debug, Deserialize, Serialize)]
-pub struct ConfigrationData {
+pub struct ConfigurationData {
     /// theme color
     color: Option<String>,
 
@@ -40,7 +44,7 @@ pub struct ConfigrationData {
 }
 
 #[derive(Default, Serialize)]
-pub struct ConfigrationImport {
+pub struct ConfigurationImport {
     /// theme color
     color: Option<String>,
 
@@ -51,62 +55,56 @@ pub struct ConfigrationImport {
     mirrors: Option<String>,
 }
 
-/// configration export
-pub async fn configration_export(
+/// configuration export
+pub async fn configuration_export(
     output_path: PathBuf,
-    configration: ConfigrationExport,
+    configuration: ConfigurationExport,
 ) -> Result<()> {
-    let ConfigrationExport {
+    let ConfigurationExport {
         color,
         setting,
         mirrors,
         projects,
-    } = configration;
+    } = configuration;
 
-    let mut output = ConfigrationData::default();
-
+    let mut output = ConfigurationData::default();
     // export theme color
     if let Some(color) = color {
         output.color = Some(color);
     }
-
     // export setting & mirrors data
     if setting.unwrap_or(false) {
         output.setting = Some(Config::settings().latest().clone());
         output.mirrors = mirrors;
     }
-
     // export projects & groups data
     if projects.unwrap_or(false) {
         output.projects = Config::projects().latest().get_list();
         output.groups = Config::groups().latest().get_list();
     }
-
-    let output_json = serde_json::to_string_pretty(&output)?;
-    tokio::fs::write(output_path, output_json).await?;
+    async_save_json(&output_path, &output, None).await?;
 
     Ok(())
 }
 
-/// configration import
-pub async fn configration_import(
+/// configuration import
+pub async fn configuration_import(
     app_handle: &tauri::AppHandle,
     sync: bool,
-) -> Result<Option<ConfigrationImport>> {
+) -> Result<Option<ConfigurationImport>> {
     if let Some(file_path) = app_handle
         .dialog()
         .file()
         .add_filter("Select Json", &["json"])
         .blocking_pick_file()
     {
-        let data = match file_path {
-            FilePath::Path(path) => tokio::fs::read_to_string(path).await?,
+        let path = match file_path {
+            FilePath::Path(path) => path,
             FilePath::Url(_) => bail!("Unsupported URL scheme"),
         };
-
-        let configration: ConfigrationData = serde_json::from_str(&data)?;
-        let projects = configration.projects.unwrap_or_default();
-        let groups = configration.groups.unwrap_or_default();
+        let configuration = async_read_json::<ConfigurationData>(&path).await?;
+        let projects = configuration.projects.unwrap_or_default();
+        let groups = configuration.groups.unwrap_or_default();
 
         // need sync node version for every project
         if sync {
@@ -147,10 +145,10 @@ pub async fn configration_import(
             }
         }
 
-        return Ok(Some(ConfigrationImport {
-            color: configration.color,
-            setting: configration.setting,
-            mirrors: configration.mirrors,
+        return Ok(Some(ConfigurationImport {
+            color: configuration.color,
+            setting: configuration.setting,
+            mirrors: configuration.mirrors,
         }));
     }
 

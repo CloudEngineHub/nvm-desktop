@@ -3,7 +3,7 @@ use std::{path::PathBuf, process::Command};
 
 use crate::{
     config::{Config, Group, ISettings, NVersion, Project},
-    core::{configration, group, handle, node, project},
+    core::{configuration, group, handle, node, project},
     ret_err,
     utils::dirs,
     wrap_err,
@@ -143,9 +143,9 @@ pub async fn update_group_version(name: String, version: String) -> CmdResult<()
 #[tauri::command]
 pub async fn configration_export(
     output_path: PathBuf,
-    configration: configration::ConfigrationExport,
+    configration: configuration::ConfigurationExport,
 ) -> CmdResult<()> {
-    wrap_err!(configration::configration_export(output_path, configration).await)
+    wrap_err!(configuration::configuration_export(output_path, configration).await)
 }
 
 /// configration import
@@ -153,8 +153,8 @@ pub async fn configration_export(
 pub async fn configration_import(
     app_handle: tauri::AppHandle,
     sync: bool,
-) -> CmdResult<Option<configration::ConfigrationImport>> {
-    wrap_err!(configration::configration_import(&app_handle, sync).await)
+) -> CmdResult<Option<configuration::ConfigurationImport>> {
+    wrap_err!(configuration::configuration_import(&app_handle, sync).await)
 }
 
 /// open project with VsCode

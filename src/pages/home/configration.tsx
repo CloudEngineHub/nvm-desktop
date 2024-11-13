@@ -92,14 +92,14 @@ const Configration: React.FC = () => {
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button
-						className="nvmd-tip"
-						size="sm"
+						className='nvmd-tip'
+						size='sm'
 						title={title}
-						variant="ghost"
+						variant='ghost'
 						icon={<Share1Icon />}
 					/>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className="w-48">
+				<DropdownMenuContent align='end' className='w-48'>
 					<DropdownMenuLabel>{title}</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 					<DropdownMenuGroup>
@@ -201,7 +201,7 @@ const ConfigrationExport = forwardRef<Exporter, {}>(({}, ref) => {
 				setOpen(open);
 			}}
 		>
-			<AlertDialogContent className="top-1/3">
+			<AlertDialogContent className='top-1/3'>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{t('Configration-export')}</AlertDialogTitle>
 					<AlertDialogDescription>
@@ -210,19 +210,19 @@ const ConfigrationExport = forwardRef<Exporter, {}>(({}, ref) => {
 					<Form {...form}>
 						<FormField
 							control={form.control}
-							name="items"
+							name='items'
 							render={() => (
 								<FormItem>
 									{items.map((item) => (
 										<FormField
 											key={item.id}
 											control={form.control}
-											name="items"
+											name='items'
 											render={({ field }) => {
 												return (
 													<FormItem
 														key={item.id}
-														className="flex flex-row items-center space-x-3 space-y-0"
+														className='flex flex-row items-center space-x-3 space-y-0'
 													>
 														<FormControl>
 															<Checkbox
@@ -238,14 +238,14 @@ const ConfigrationExport = forwardRef<Exporter, {}>(({}, ref) => {
 																}}
 															/>
 														</FormControl>
-														<FormLabel className="flex items-center gap-1 text-sm font-normal">
+														<FormLabel className='flex items-center gap-1 text-sm font-normal'>
 															{t(item.label)}
 															{item.id === 'setting' ? (
-																<span className="text-muted-foreground">
+																<span className='text-muted-foreground'>
 																	{t('Configration-export-setting')}
 																</span>
 															) : item.id === 'projects' ? (
-																<span className="text-muted-foreground">
+																<span className='text-muted-foreground'>
 																	{t('Configration-export-projects')}
 																</span>
 															) : null}
@@ -281,7 +281,7 @@ type Importer = {
 const ConfigrationImport = forwardRef<Importer, {}>(({}, ref) => {
 	const [open, setOpen] = useState<boolean>(false);
 
-	const { setColor, onUpdateSetting } = useAppContext();
+	const { updateColor, updateSetting } = useAppContext();
 	const { t } = useTranslation();
 
 	useImperativeHandle(ref, () => ({
@@ -298,9 +298,9 @@ const ConfigrationImport = forwardRef<Importer, {}>(({}, ref) => {
 			if (!data) return;
 
 			const { color, mirrors, setting } = data;
-			color && setColor(color);
+			color && updateColor(color);
 			mirrors && localStorage.setItem('nvmd-mirror', mirrors);
-			setting && onUpdateSetting(setting);
+			setting && updateSetting(setting);
 			setOpen(false);
 			toast.success(t('Configration-import-success'), { duration: 5000 });
 		} catch (err) {
@@ -315,7 +315,7 @@ const ConfigrationImport = forwardRef<Importer, {}>(({}, ref) => {
 				setOpen(open);
 			}}
 		>
-			<AlertDialogContent className="top-1/3">
+			<AlertDialogContent className='top-1/3'>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{t('Configration-import')}</AlertDialogTitle>
 					<AlertDialogDescription>
@@ -324,7 +324,7 @@ const ConfigrationImport = forwardRef<Importer, {}>(({}, ref) => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
-					<Button variant="tag" onClick={() => onConfigrationImport(false)}>
+					<Button variant='tag' onClick={() => onConfigrationImport(false)}>
 						{t('Import-only')}
 					</Button>
 					<Button onClick={() => onConfigrationImport(true)}>

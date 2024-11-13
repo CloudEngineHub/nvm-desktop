@@ -85,15 +85,6 @@ impl INode {
         }
     }
 
-    /// return the default node config
-    pub fn template() -> Self {
-        Self {
-            list: Some(vec![]),
-            installed: Some(vec![]),
-            ..Self::default()
-        }
-    }
-
     /// save list to file
     pub fn save_file(&self) -> Result<()> {
         help::save_json(&dirs::version_list_path()?, &self.list, None)

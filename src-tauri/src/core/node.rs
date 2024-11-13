@@ -20,7 +20,6 @@ use crate::{
     config::{Config, NVersion},
     core::handle,
     log_err,
-    utils::dirs,
 };
 
 static CANCEL_SENDER: Lazy<Arc<Mutex<Option<watch::Sender<bool>>>>> =
@@ -97,7 +96,7 @@ pub async fn get_version_list(fetch: Option<bool>) -> Result<Option<Vec<NVersion
 
     let settings = Config::settings().data().clone();
 
-    // fetch list data from remotefetch data from remote
+    // fetch list data from remote
     let list = version_list::<Vec<NVersion>>(ListConfig {
         mirror: settings.mirror,
         proxy: settings.proxy,
