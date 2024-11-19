@@ -1,3 +1,17 @@
+## v4.0.4
+
+### Features
+
+- enhance the `Open With VSCode` feature
+- use `tauri-plugin-window-state`
+
+### Bug Fixes
+
+- the migrate script will block application startup
+- filter the logs inside tauri to reduce the amount of logs
+
+---
+
 ## v4.0.3
 
 ### Features
