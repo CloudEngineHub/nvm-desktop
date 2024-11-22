@@ -32,6 +32,7 @@ import { Modal, type Ref as ModalRef } from './modal';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { useTranslation } from 'react-i18next';
+import { open } from '@tauri-apps/plugin-shell';
 import { useAppContext } from '@/app-context';
 import {
 	vCurrent,
@@ -133,15 +134,20 @@ export const Versions: React.FC = () => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<a
-										className='h-6 p-0 leading-6 text-md text-foreground font-medium hover:text-primary hover:underline'
-										href={`https://github.com/nodejs/node/releases/tag/${version}`}
-										target='_blank'
+										className='h-6 p-0 leading-6 text-md text-foreground font-medium cursor-pointer hover:text-primary hover:underline'
+										onClick={async () => {
+											await open(
+												`https://github.com/nodejs/node/releases/tag/${version}`
+											);
+										}}
 									>
 										{version}
 									</a>
 								</TooltipTrigger>
 								<TooltipPortal>
-									<TooltipContent>{t('Whats-new')}</TooltipContent>
+									<TooltipContent className='bg-primary'>
+										{t('Whats-new')}
+									</TooltipContent>
 								</TooltipPortal>
 							</Tooltip>
 							{lts ? (
