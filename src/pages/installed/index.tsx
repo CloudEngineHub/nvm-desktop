@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router';
 import { toast } from 'sonner';
 import {
 	Button,
@@ -56,7 +56,7 @@ export async function loader() {
 
 export const Component: React.FC = () => {
 	const [currentVersion, allVersions, allInstalledVersions] =
-		useLoaderData() as VersionsResult;
+		useLoaderData<VersionsResult>();
 
 	const [current, setCurrent] = useState<string>(() => currentVersion);
 	const [versions, setVersions] = useState<Nvmd.Versions>(() =>

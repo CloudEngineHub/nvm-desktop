@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router';
 import {
 	Button,
 	DataTable,
@@ -61,7 +61,7 @@ export async function loader() {
 }
 
 export const Versions: React.FC = () => {
-	const versionsData = useLoaderData() as VersionsResult;
+	const versionsData = useLoaderData<VersionsResult>();
 	const [currentVersion, allVersions, allInstalledVersions] = versionsData;
 
 	const [current, setCurrent] = useState<string>(() => currentVersion);

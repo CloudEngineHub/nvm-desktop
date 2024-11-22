@@ -1,7 +1,7 @@
 import './intro.css';
 
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router';
 import {
 	Button,
 	NavigationMenu,

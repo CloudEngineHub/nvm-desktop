@@ -2,7 +2,7 @@ import { LabelCopyable } from './ui';
 import ErrorLogo from '../assets/500.svg';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
-import { useRouteError } from 'react-router-dom';
+import { useRouteError } from 'react-router';
 
 export function ErrorBoundary() {
 	const error = useRouteError() as Error;

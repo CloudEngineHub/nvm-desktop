@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router';
 
 import {
   AlertDialog,
@@ -61,11 +61,8 @@ export async function loader() {
 }
 
 export const Component: React.FC = () => {
-  const [allProjects, allGroups, allInstalledVersions] = useLoaderData() as [
-    Nvmd.Project[],
-    Nvmd.Group[],
-    Array<string>
-  ];
+  const [allProjects, allGroups, allInstalledVersions] =
+		useLoaderData<[Nvmd.Project[], Nvmd.Group[], Array<string>]>();
 
   const [installedVersions, setInstalledVersions] = useState<string[]>(
     () => allInstalledVersions
