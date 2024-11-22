@@ -98,23 +98,20 @@ fn main() -> tauri::Result<()> {
     let app = builder.build(tauri::generate_context!())?;
 
     app.run(|app_handle, err| match err {
-        tauri::RunEvent::ExitRequested { api, .. } => {
-            let closer = Config::settings()
-                .data()
-                .get_closer()
-                .unwrap_or("minimize".to_string());
-
-            if closer == "minimize" {
-                api.prevent_exit();
-                return;
-            }
-
+        tauri::RunEvent::ExitRequested { .. } => {
             let _ = app_handle.save_window_state(StateFlags::default());
         }
         tauri::RunEvent::WindowEvent { label, event, .. } => {
             if label == "main" {
                 match event {
                     tauri::WindowEvent::CloseRequested { api, .. } => {
+                        let closer = Config::settings()
+                            .data()
+                            .get_closer()
+                            .unwrap_or("minimize".to_string());
+                        if closer == "close" {
+                            return;
+                        }
                         // CloseRequested Event
                         api.prevent_close();
                         if let Some(window) = core::handle::Handle::global().get_window() {
