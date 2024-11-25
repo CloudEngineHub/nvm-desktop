@@ -27,8 +27,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { toast } from 'sonner';
 import {
 	MagnifyingGlassIcon,
@@ -48,9 +46,10 @@ import {
 	batchUpdateProjectVersion,
 	updateGroupVersion,
 } from '@/services/cmds';
-import type { ColumnDef } from '@tanstack/react-table';
 import { compareArray } from '@/lib/utils';
 import { getCurrent } from '@/services/api';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { UniqueIdentifier } from '@dnd-kit/core';
 
 export async function loader() {
 	const loadData = await Promise.all([
@@ -108,12 +107,6 @@ export const Component: React.FC = () => {
 
 	const columns: ColumnDef<Nvmd.Group>[] = useMemo(
 		() => [
-			{
-				accessorKey: 'sort',
-				maxSize: 50,
-				enableHiding: false,
-				header: () => null,
-			},
 			{
 				accessorKey: 'name',
 				header: t('Group-Name'),
@@ -337,6 +330,11 @@ export const Component: React.FC = () => {
 		[t, projects, installedVersions.length, groups.length]
 	);
 
+	const dataIds = useMemo<UniqueIdentifier[]>(
+		() => groups?.map(({ name }) => name),
+		[groups]
+	);
+
 	const reorderRow = (draggedRowIndex: number, targetRowIndex: number) => {
 		setGroups((previous) => {
 			previous.splice(
@@ -427,44 +425,44 @@ export const Component: React.FC = () => {
 	};
 
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<div className='h-full flex flex-col space-y-2'>
-				<DataDndTable
-					key='page-groups-table'
-					columns={columns}
-					data={groups}
-					loading={loading}
-					toolbar={(table) => (
+		<div className='h-full flex flex-col space-y-2'>
+			<DataDndTable
+				key='page-groups-table'
+				columns={columns}
+				data={groups}
+				items={dataIds}
+				loading={loading}
+				toolbar={(table) => (
+					<div className='flex items-center gap-2'>
+						<DataTableToolbar
+							key='page-groups-table-tool'
+							table={table}
+							filterName='Group-Name'
+							status={false}
+						/>
 						<div className='flex items-center gap-2'>
-							<DataTableToolbar
-								key='page-groups-table-tool'
-								table={table}
-								filterName='Group-Name'
-								status={false}
+							<Button
+								size='sm'
+								className='h-7 text-sm'
+								loading={loading}
+								icon={<ReloadIcon />}
+								onClick={onPageReload}
+							>
+								{t('Page-Reload')}
+							</Button>
+							<GroupCreator
+								projects={projects}
+								groups={groups}
+								versions={installedVersions}
+								onSubmit={onSubmit}
 							/>
-							<div className='flex items-center gap-2'>
-								<Button
-									size='sm'
-									className='h-7 text-sm'
-									loading={loading}
-									icon={<ReloadIcon />}
-									onClick={onPageReload}
-								>
-									{t('Page-Reload')}
-								</Button>
-								<GroupCreator
-									projects={projects}
-									groups={groups}
-									versions={installedVersions}
-									onSubmit={onSubmit}
-								/>
-							</div>
 						</div>
-					)}
-					reorderRow={reorderRow}
-				/>
-			</div>
-		</DndProvider>
+					</div>
+				)}
+				getRowId={(row) => row.name}
+				reorderRow={reorderRow}
+			/>
+		</div>
 	);
 };
 
