@@ -1,3 +1,13 @@
+## v4.0.5
+
+### Bug Fixes
+
+- clicking on the version link will open two duplicate browser windows
+- the application does not exit directly as expected
+- table drag sorting fails
+
+---
+
 ## v4.0.4
 
 ### Features
