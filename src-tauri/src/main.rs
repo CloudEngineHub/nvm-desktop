@@ -60,7 +60,7 @@ fn main() -> tauri::Result<()> {
             cmds::group_list,
             cmds::update_groups,
             cmds::update_group_version,
-            // configration
+            // configuration
             cmds::configration_export,
             cmds::configration_import,
             // app
@@ -97,10 +97,7 @@ fn main() -> tauri::Result<()> {
 
     let app = builder.build(tauri::generate_context!())?;
 
-    app.run(|app_handle, err| match err {
-        tauri::RunEvent::ExitRequested { .. } => {
-            let _ = app_handle.save_window_state(StateFlags::default());
-        }
+    app.run(|_, err| match err {
         tauri::RunEvent::WindowEvent { label, event, .. } => {
             if label == "main" {
                 match event {

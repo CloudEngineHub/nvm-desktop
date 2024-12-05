@@ -46,6 +46,7 @@ pub fn create_window() -> Result<()> {
     .visible(false)
     .fullscreen(false)
     .inner_size(1024.0, 728.0)
+    .min_inner_size(1024.0, 728.0)
     .resizable(false)
     .center();
 
@@ -67,11 +68,8 @@ pub fn create_window() -> Result<()> {
     #[cfg(target_os = "linux")]
     let window = builder.decorations(false).transparent(true).build()?;
 
-    if tauri::is_dev() {
-        window.open_devtools();
-    }
-
-    let _ = window.restore_state(StateFlags::all());
+    #[cfg(debug_assertions)]
+    window.open_devtools();
 
     Ok(())
 }

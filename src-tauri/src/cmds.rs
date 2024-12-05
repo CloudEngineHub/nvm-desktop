@@ -1,5 +1,6 @@
 use anyhow::Result;
 use std::{path::PathBuf, process::Command};
+use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 
 use crate::{
     config::{Config, Group, ISettings, NVersion, Project},
@@ -188,6 +189,7 @@ pub fn open_dir(dir: String) -> CmdResult<()> {
 /// restart app
 #[tauri::command]
 pub fn restart(app_handle: tauri::AppHandle) {
+    let _ = app_handle.save_window_state(StateFlags::default());
     app_handle.restart()
 }
 
