@@ -4,18 +4,17 @@
 
 # Node Version Manager Desktop
 
-`nvm-desktop` 是一个以可视化界面操作方式管理多个 Node 版本的桌面应用，使用 [Tauri](https://v2.tauri.app/) 构建（支持 `macOS`、`Windows` 以及 `Linux` 系统）。通过该应用，您可以快速安装、管理和使用不同版本的 Node。
+`nvm-desktop` 是一个桌面应用程序，通过可视化界面帮助你管理多个 Node.js 版本。应用程序使用 [Tauri](https://v2.tauri.app/) 构建，支持 `macOS`、`Windows` 以及 `Linux` 系统。可以轻松快速地安装、管理并切换不同的 Node.js 版本，而无需依赖操作系统的任何特定功能和 shell。
 
-完美支持为不同的项目单独设置和切换 Node 版本，不依赖操作系统的任何特定功能和 shell。
+程序还支持在不同项目间独立设置和切换 Node.js 版本。每个版本间的环境是相互隔离的，这意味着在一个版本下通过 npm 安装的全局依赖，在切换到另一个版本后将不可用。如需共享这些全局依赖，可以使用 `npm config set prefix "/path/to/folder"` 命令，将全局包安装到指定目录。在切换 Node.js 版本时，所有版本都可以使用该路径下的包。
 
-智能（快速）识别正确 Node 引擎版本的功能由另一个项目：[nvmd-command](https://github.com/1111mp/nvmd-command) 提供支持，它是一个单一、快速的本机可执行文件，没有外部依赖项，使用 Rust 构建。
+智能识别合适的 Node 引擎版本的功能由 [nvmd-command](https://github.com/1111mp/nvmd-command) 提供支持，这是一个用 Rust 编写的、无外部依赖的本机可执行文件。
 
 [English](https://github.com/1111mp/nvm-desktop/blob/tauri/README.md) | 简体中文
 
 ## 目录
 
 - [截图](#截图)
-- [一些或许你需要知道的事情](#一些或许你需要知道的事情)
 - [命令行工具](#命令行工具)
 - [安装](#安装)
   - [下载](#下载)
@@ -34,101 +33,101 @@
 
 <img width="1030" alt="Screenshot 2024-10-05 at 10 08 31" src="https://github.com/user-attachments/assets/d8005347-a671-4c25-a776-658b258fe06e">
 
-## 一些或许你需要知道的事情
+<details>
+	<summary><h2 style="display:inline-block;">一些或许你需要知道的事情</h2></summary>
 
 所有与`nvm-desktop`相关的文件都保存在`"$HOME/.nvmd/"`目录下：
 
-- `"bin/"`(文件夹) **保存着所有 Node.js 可执行文件的垫片**。 目录 `"$HOME/.nvmd/bin` 需要添加到系统的环境变量里面。
+- `"bin/"`(目录) **保存着所有 Node.js 可执行文件的垫片**。 目录 `"$HOME/.nvmd/bin` 需要添加到系统的环境变量里面。
 
-  | macOS        | Windows                      |
-  | :---:        | :---:                        |
-  | `nvmd`       | `nvmd.exe`                   |
-  | `node`       | `node.exe`                   |
-  | `npm`        | `npm.exe npm.cmd`            |
-  | `npx`        | `npx.exe npx.cmd`            |
-  | `corepack`   | `corepack.exe corepack.cmd`  |
+  |   macOS    |           Windows           |
+  | :--------: | :-------------------------: |
+  |   `nvmd`   |         `nvmd.exe`          |
+  |   `node`   |         `node.exe`          |
+  |   `npm`    |      `npm.exe npm.cmd`      |
+  |   `npx`    |      `npx.exe npx.cmd`      |
+  | `corepack` | `corepack.exe corepack.cmd` |
 
-- `"versions/"`(文件夹) **保存着所有下载的 Node.js 版本的文件，文件名一般以 Node.js 的版本号为**。 例如： `"$HOME/.nvmd/versions/21.2.0"`.
+- `"versions/"`(目录) **保存着所有下载的 Node.js 版本的文件，文件名一般以 Node.js 的版本号为**。 例如： `"$HOME/.nvmd/versions/21.2.0"`.
 - `"default"`(文件) **文件内容为全局设置 Node.js 版本的版本号**， 例如： `21.2.0`.
 - `"migration"`(文件) `nvm-desktop` 每次升级时都会根据这个文件来控制脚本代码的执行。
 - `"setting.json"`(文件) **保存着 `nvm-desktop` 设置中心的设置信息**， 比如 `Theme, Language, Mirror Url` 等。
   ```json
   {
-    "locale": "en",
-    "theme": "system",
-    "closer": "minimize",
-    "directory": "/Users/********/.nvmd/versions",
-    "mirror": "https://nodejs.org/dist"
+  	"locale": "en",
+  	"theme": "system",
+  	"closer": "minimize",
+  	"directory": "/Users/********/.nvmd/versions",
+  	"mirror": "https://nodejs.org/dist"
   }
   ```
 - `"projects.json"`(文件) **保存着所有添加过的项目的信息**。
   ```json
   [
-    {
-      "name": "nvm-desktop",
-      "path": "/Users/********/Documents/Electron/nvm-desktop",
-      "version": "20.6.1",
-      "active": true,
-      "createAt": "2023-11-25T04:07:43.012Z",
-      "updateAt": "2023-11-25T04:07:44.931Z"
-    },
-    {
-      "name": "electron_client",
-      "path": "/Users/********/Documents/projects/electron_client",
-      "version": "20.6.1",
-      "active": true,
-      "createAt": "2023-11-25T04:07:35.172Z",
-      "updateAt": "2023-11-25T04:07:37.234Z"
-    }
+  	{
+  		"name": "nvm-desktop",
+  		"path": "/Users/********/Documents/Electron/nvm-desktop",
+  		"version": "20.6.1",
+  		"active": true,
+  		"createAt": "2023-11-25T04:07:43.012Z",
+  		"updateAt": "2023-11-25T04:07:44.931Z"
+  	},
+  	{
+  		"name": "electron_client",
+  		"path": "/Users/********/Documents/projects/electron_client",
+  		"version": "20.6.1",
+  		"active": true,
+  		"createAt": "2023-11-25T04:07:35.172Z",
+  		"updateAt": "2023-11-25T04:07:37.234Z"
+  	}
   ]
   ```
 - `"packages.json"`(文件) **保存着 npm 全局安装的包的相关的信息**。 更多信息请查看 [how-does-it-work](https://github.com/1111mp/nvmd-command#how-does-it-work).
-- `"versions.json"`(文件) 保存着从 `"https://nodejs.org/dist"`（默认） 请求过来的所有的 Node.js  的版本的信息。
+- `"versions.json"`(文件) 保存着从 `"https://nodejs.org/dist"`（默认） 请求过来的所有的 Node.js 的版本的信息。
   ```json
   [
-    {
-      "version": "v21.2.0",
-      "date": "2023-11-14",
-      "files": [
-        "aix-ppc64",
-        "headers",
-        "linux-arm64",
-        "linux-armv7l",
-        "linux-ppc64le",
-        "linux-s390x",
-        "linux-x64",
-        "osx-arm64-tar",
-        "osx-x64-pkg",
-        "osx-x64-tar",
-        "src",
-        "win-arm64-7z",
-        "win-arm64-zip",
-        "win-x64-7z",
-        "win-x64-exe",
-        "win-x64-msi",
-        "win-x64-zip",
-        "win-x86-7z",
-        "win-x86-exe",
-        "win-x86-msi",
-        "win-x86-zip"
-      ],
-      "npm": "10.2.3",
-      "v8": "11.8.172.17",
-      "uv": "1.46.0",
-      "zlib": "1.2.13.1-motley",
-      "openssl": "3.0.12+quic",
-      "modules": "120",
-      "lts": false,
-      "security": false
-    },
+  	{
+  		"version": "v21.2.0",
+  		"date": "2023-11-14",
+  		"files": [
+  			"aix-ppc64",
+  			"headers",
+  			"linux-arm64",
+  			"linux-armv7l",
+  			"linux-ppc64le",
+  			"linux-s390x",
+  			"linux-x64",
+  			"osx-arm64-tar",
+  			"osx-x64-pkg",
+  			"osx-x64-tar",
+  			"src",
+  			"win-arm64-7z",
+  			"win-arm64-zip",
+  			"win-x64-7z",
+  			"win-x64-exe",
+  			"win-x64-msi",
+  			"win-x64-zip",
+  			"win-x86-7z",
+  			"win-x86-exe",
+  			"win-x86-msi",
+  			"win-x86-zip"
+  		],
+  		"npm": "10.2.3",
+  		"v8": "11.8.172.17",
+  		"uv": "1.46.0",
+  		"zlib": "1.2.13.1-motley",
+  		"openssl": "3.0.12+quic",
+  		"modules": "120",
+  		"lts": false,
+  		"security": false
+  	}
   ]
   ```
+  </details>
 
 ## 命令行工具
 
-您可以直接在终端中输入命令行管理所有 Node 版本。 `nvmd` 不提供 Node 的下载安装功能，如果您需要下载安装新版本的 Node，请打开 `nvm-desktop` 客户端。
-
-`nvmd` 允许您通过命令行快速管理不同版本的 Node：
+`nvmd` 让你通过命令行管理 Node.js 版本。注意：`nvmd` 不提供下载安装功能，如需下载安装请使用 `nvm-desktop` 客户端。
 
 ```shell
 $ nvmd use 18.17.1
@@ -151,7 +150,7 @@ v20.5.1
 
 ```shell
 $ nvmd --help
-nvmd (2.2.0)
+nvmd (4.0.5)
 command tools for nvm-desktop
 
 Usage: nvmd [COMMAND]
@@ -171,7 +170,7 @@ Options:
 Please download new version of Node.js in nvm-desktop.
 ```
 
-在你通过`nvmd use` 命令行切换Node版本之后，请点击刷新按钮让`nvm-desktop`同步最新的数据。
+> 在你通过`nvmd use` 命令行切换 Node 版本之后，请点击刷新按钮让`nvm-desktop`同步最新的数据。
 
 更多详情请查看此文档: [command-tools-intro](https://github.com/1111mp/nvmd-command#command-tools-intro) .
 
@@ -197,11 +196,13 @@ Please download new version of Node.js in nvm-desktop.
   export NVMD_DIR="$HOME/.nvmd"
   export PATH="$NVMD_DIR/bin:$PATH"
   ```
+
   默认的文件可能是：
-    - .zshrc
-    - .bashrc
-    - .bash_profile
-    - .profile
+
+  - .zshrc
+  - .bashrc
+  - .bash_profile
+  - .profile
 
 ### Windows 卸载
 
@@ -258,8 +259,8 @@ Please download new version of Node.js in nvm-desktop.
 
 ## 功能
 
-- [x] 支持为系统全局和项目单独设置Node引擎版本
-- [x] 管理Node的命令行工具
+- [x] 支持为系统全局和项目单独设置 Node 引擎版本
+- [x] 管理 Node 的命令行工具
 - [x] 支持英文和简体中文
 - [x] 支持自定义下载镜像地址 (默认是 https://nodejs.org/dist)
 - [x] 自动检查更新

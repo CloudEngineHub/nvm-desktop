@@ -4,18 +4,17 @@
 
 # Node Version Manager Desktop
 
-`nvm-desktop` is a desktop application that manages multiple Node versions in a visual interface. It is built with [Tauri](https://v2.tauri.app/) (supports `macOS`, `Windows` and `Linux` platform). With this application, you can quickly install, manage and use different versions of Node.
+`nvm-desktop` is a desktop application that helps you manage multiple Node.js versions through a visual interface. The application is built using [Tauri](https://v2.tauri.app/) and supports `macOS`, `Windows`, and `Linux` systems. It allows you to easily and quickly install, manage, and switch between different Node.js versions without relying on any OS-specific features or shells.
 
-**Now you can set the Node.js version for your project individually**.
+The program also supports independently setting and switching Node.js versions between different projects. Each version's environment is isolated, meaning global dependencies installed via npm under one version will not be available when switched to another version. To share these global dependencies, you can use the `npm config set prefix "/path/to/folder"` command to install global packages in a specified directory. When switching Node.js versions, all versions will have access to the packages in that path.
 
-The ability to intelligently identify the correct Node.js version is powered by [nvmd-command](https://github.com/1111mp/nvmd-command). It’s a single, fast native executable, with no external dependencies, build with Rust.
+The smart detection of the appropriate Node engine version is powered by [nvmd-command](https://github.com/1111mp/nvmd-command), which is a native executable written in Rust with no external dependencies.
 
 English | [简体中文](https://github.com/1111mp/nvm-desktop/blob/tauri/README-zh_CN.md)
 
 ## Table of Contents
 
 - [Screenshot](#screenshot)
-- [Maybe somethings you need to know](#maybe-somethings-you-need-to-know)
 - [Command tools intro](#command-tools-intro)
 - [Install](#install)
   - [Download](#download)
@@ -34,19 +33,20 @@ English | [简体中文](https://github.com/1111mp/nvm-desktop/blob/tauri/README
 
 <img width="1030" alt="Screenshot 2024-10-05 at 10 08 31" src="https://github.com/user-attachments/assets/d8005347-a671-4c25-a776-658b258fe06e">
 
-## Maybe somethings you need to know
+<details>
+	<summary><h2 style="display:inline-block;">Maybe somethings you need to know</h2></summary>
 
 All the files related to `nvm-desktop` are located in the `"$HOME/.nvmd/"` directory:
 
 - `"bin/"`(floder) **All the shims of the Node.js are stored**. The path `"$HOME/.nvmd/bin` needs to be added to the environment variable of the system.
 
-  | macOS        | Windows                      |
-  | :---:        | :---:                        |
-  | `nvmd`       | `nvmd.exe`                   |
-  | `node`       | `node.exe`                   |
-  | `npm`        | `npm.exe npm.cmd`            |
-  | `npx`        | `npx.exe npx.cmd`            |
-  | `corepack`   | `corepack.exe corepack.cmd`  |
+|   macOS    |           Windows           |
+| :--------: | :-------------------------: |
+|   `nvmd`   |         `nvmd.exe`          |
+|   `node`   |         `node.exe`          |
+|   `npm`    |      `npm.exe npm.cmd`      |
+|   `npx`    |      `npx.exe npx.cmd`      |
+| `corepack` | `corepack.exe corepack.cmd` |
 
 - `"versions/"`(floder) **It stores all downloaded Node.js version files, and the floder is usually named with the Node.js version number**. For example: `"$HOME/.nvmd/versions/21.2.0/"`.
 - `"default"`(file) **The file contains the version number of the node that is set globally**, for example: `21.2.0`.
@@ -54,81 +54,80 @@ All the files related to `nvm-desktop` are located in the `"$HOME/.nvmd/"` direc
 - `"setting.json"`(file) **It stores information about the nvm-desktop settings center**, such as `Theme, Language, Mirror Url`, etc.
   ```json
   {
-    "locale": "en",
-    "theme": "system",
-    "closer": "minimize",
-    "directory": "/Users/********/.nvmd/versions",
-    "mirror": "https://nodejs.org/dist"
+  	"locale": "en",
+  	"theme": "system",
+  	"closer": "minimize",
+  	"directory": "/Users/********/.nvmd/versions",
+  	"mirror": "https://nodejs.org/dist"
   }
   ```
 - `"projects.json"`(file) **Saves all added projects**.
   ```json
   [
-    {
-      "name": "nvm-desktop",
-      "path": "/Users/********/Documents/Electron/nvm-desktop",
-      "version": "20.6.1",
-      "active": true,
-      "createAt": "2023-11-25T04:07:43.012Z",
-      "updateAt": "2023-11-25T04:07:44.931Z"
-    },
-    {
-      "name": "electron_client",
-      "path": "/Users/********/Documents/projects/electron_client",
-      "version": "20.6.1",
-      "active": true,
-      "createAt": "2023-11-25T04:07:35.172Z",
-      "updateAt": "2023-11-25T04:07:37.234Z"
-    }
+  	{
+  		"name": "nvm-desktop",
+  		"path": "/Users/********/Documents/Electron/nvm-desktop",
+  		"version": "20.6.1",
+  		"active": true,
+  		"createAt": "2023-11-25T04:07:43.012Z",
+  		"updateAt": "2023-11-25T04:07:44.931Z"
+  	},
+  	{
+  		"name": "electron_client",
+  		"path": "/Users/********/Documents/projects/electron_client",
+  		"version": "20.6.1",
+  		"active": true,
+  		"createAt": "2023-11-25T04:07:35.172Z",
+  		"updateAt": "2023-11-25T04:07:37.234Z"
+  	}
   ]
   ```
 - `"packages.json"`(file) **Information about the installation of the `npm` global package is saved**. For more information, please check [how-does-it-work](https://github.com/1111mp/nvmd-command#how-does-it-work).
 - `"versions.json"`(file) Cache details of all Node.js versions requested from `"https://nodejs.org/dist"`(default).
   ```json
   [
-    {
-      "version": "v21.2.0",
-      "date": "2023-11-14",
-      "files": [
-        "aix-ppc64",
-        "headers",
-        "linux-arm64",
-        "linux-armv7l",
-        "linux-ppc64le",
-        "linux-s390x",
-        "linux-x64",
-        "osx-arm64-tar",
-        "osx-x64-pkg",
-        "osx-x64-tar",
-        "src",
-        "win-arm64-7z",
-        "win-arm64-zip",
-        "win-x64-7z",
-        "win-x64-exe",
-        "win-x64-msi",
-        "win-x64-zip",
-        "win-x86-7z",
-        "win-x86-exe",
-        "win-x86-msi",
-        "win-x86-zip"
-      ],
-      "npm": "10.2.3",
-      "v8": "11.8.172.17",
-      "uv": "1.46.0",
-      "zlib": "1.2.13.1-motley",
-      "openssl": "3.0.12+quic",
-      "modules": "120",
-      "lts": false,
-      "security": false
-    },
+  	{
+  		"version": "v21.2.0",
+  		"date": "2023-11-14",
+  		"files": [
+  			"aix-ppc64",
+  			"headers",
+  			"linux-arm64",
+  			"linux-armv7l",
+  			"linux-ppc64le",
+  			"linux-s390x",
+  			"linux-x64",
+  			"osx-arm64-tar",
+  			"osx-x64-pkg",
+  			"osx-x64-tar",
+  			"src",
+  			"win-arm64-7z",
+  			"win-arm64-zip",
+  			"win-x64-7z",
+  			"win-x64-exe",
+  			"win-x64-msi",
+  			"win-x64-zip",
+  			"win-x86-7z",
+  			"win-x86-exe",
+  			"win-x86-msi",
+  			"win-x86-zip"
+  		],
+  		"npm": "10.2.3",
+  		"v8": "11.8.172.17",
+  		"uv": "1.46.0",
+  		"zlib": "1.2.13.1-motley",
+  		"openssl": "3.0.12+quic",
+  		"modules": "120",
+  		"lts": false,
+  		"security": false
+  	}
   ]
   ```
+  </details>
 
 ## Command tools intro
 
-You can also manage all versions of Node.js directly from the command line. The `nvmd` does not provide the Node.js download and installation functions. If you need to download and install a new version of Node.js, you should open the `nvm-desktop` application.
-
-`nvmd` allows you to quickly manage different versions of Node.js via the command line.
+`nvmd` allows you to manage Node.js versions via the command line. Note: `nvmd` does not provide download and installation features. To download and install, please use the `nvm-desktop` client.
 
 ```shell
 $ nvmd use 18.17.1
@@ -151,7 +150,7 @@ v20.5.1
 
 ```shell
 $ nvmd --help
-nvmd (2.2.0)
+nvmd (4.0.5)
 command tools for nvm-desktop
 
 Usage: nvmd [COMMAND]
@@ -171,7 +170,7 @@ Options:
 Please download new version of Node.js in nvm-desktop.
 ```
 
-After you switch the Node version through the `nvmd use` command line, please click the refresh button to let `nvm-desktop` synchronize the latest data.
+> After you switch the Node version through the `nvmd use` command line, please click the refresh button to let `nvm-desktop` synchronize the latest data.
 
 For more details, please check document: [command-tools-intro](https://github.com/1111mp/nvmd-command#command-tools-intro) .
 
@@ -265,4 +264,3 @@ A file will be added to the root of the project: `.nvmdrc`, the content is the v
 - [x] Support English & Simplified Chinese
 - [x] Support for custom download mirrors (default is https://nodejs.org/dist)
 - [x] Support automatic update.
-
