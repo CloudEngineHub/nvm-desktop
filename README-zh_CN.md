@@ -182,8 +182,6 @@ Please download new version of Node.js in nvm-desktop.
 
 - [nvmd-desktop 下载页面 (GitHub release)](https://github.com/1111mp/nvm-desktop/releases)
 
-应用程序的自动检查更新功能从 `v4.0.0` 版本开始已支持全平台。
-
 ## 卸载
 
 ### macOS 卸载
@@ -212,50 +210,39 @@ Please download new version of Node.js in nvm-desktop.
 
 ## 开发和构建
 
-`nvm-desktop` 依赖 `nvmd-command` 提供智能识别正确 Node 引擎版本的功能，所以你需要在本地提前为 `nvm-desktop` 构建一个可执行文件。关于如何构建 `nvmd-command` 的可执行文件，请查看此文档： [build-nvmd-command](https://github.com/1111mp/nvmd-command#build-nvmd-command)。
-
-- 首先提前为 `nvm-desktop` 构建一个可执行文件
-- 将这个可执行文件复制到 `nvm-desktop` 的指定目录下：
-  - macOS `"./assets/sources/nvmd"`
-  - Windows `"./assets/sources/{arch}.exe"`, 例如: `"./assets/sources/x64.exe"` & `"./assets/sources/arm64.exe"`
-- 在 Windows 平台，你还需要添加一个名为 `temp.cmd` 的文件到指定目录： `./assets/sources/temp.cmd`， `temp.cmd` 文件的内容为:
-
-```shell
-@echo off
-"%~dpn0.exe" %*
-```
-
-然后你就可以开始在本地运行和构建 `nvm-desktop` 了。
-
-从 `v4.0.0` 版本开始，已经迁移到 `tauri`，所以已经不需要上述操作了，直接运行 `pnpm check` 命令即可。
+- 首先，你应该在本地安装 `Rust` 运行环境。请阅读官方指南：[Rust Get Started](https://www.rust-lang.org/learn/get-started)
+- 其次，确保你本地已经安装过 [Node.js](https://nodejs.org/) 了
 
 ### 开发
 
-- 首先，你应该在本地安装 `Rust` 运行环境。请阅读官方指南：[rust get started](https://www.rust-lang.org/learn/get-started)
-- 其次，确保你本地已经安装过 [Node.js](https://nodejs.org/) 了
-- 去到项目的根目录，然后在终端运行：`pnpm install` 命令为项目安装依赖
+将项目代码克隆到本地，去到项目的根目录，然后在终端运行：
+- `pnpm check`：下载 `nvmd` 文件到 `./src-tauri/resources/` 目录下
+- `pnpm install`：安装项目依赖
 
 有两种方式启动开发服务器：
 
 - 使用 `pnpm dev` 命令
-- `F5` 按键一键启动（Debug 模式）
+- `F5` 按键一键启动（VSCode Debug 模式）
 
 ### 构建生产包
 
 - 去到项目根目录
-- 执行 `pnpm build` 命令， 如果一切工作都正常运行的话，你可以在 `./src-tauri/target/release/bundle` 目录下找到构建好的包文件
+- 执行 `pnpm build` 命令
+
+如果一切工作都正常运行的话，你可以在 `./src-tauri/target/release/bundle` 目录下找到构建好的包文件
 
 ## 管理您的项目
 
-现在，您可以为您的项目单独选择不同的 Node 版本，无需任何其他依赖项和额外工作。
+现在，您可以为每个项目单独选择不同的 Node.js 版本，无需任何额外依赖或复杂配置。此功能由 `nvmd-command` 提供底层支持，帮助您在多项目开发中保持 Node.js 环境的一致性和简便性。
 
-此功能依赖 `nvmd-command` 的底层支持。
+通过该功能，您可以：
+- 为每个项目选择独立的 Node.js 版本。
+- 自动检测项目根目录下的 `.nvmdrc` 文件，以确定适用的 Node 版本。
+- 无需手动配置或安装其他工具，`nvmd` 将自动识别并切换到所需版本。
+
+<img width="1636" alt="Screenshot 2025-01-01 at 10 25 22" src="https://github.com/user-attachments/assets/0638279b-86d2-4498-a299-c670fc4e963a" />
 
 更多详情，请查看：[nvmd-command](https://github.com/1111mp/nvmd-command) 项目代码。
-
-<img width="1660" alt="image" src="https://github.com/1111mp/nvm-desktop/assets/31227919/ac8653c4-5b40-447f-b10c-557907d101df">
-
-在你项目的根目录下会添加一个文件：`.nvmdrc`，文件的内容为你在 `nvm-desktop` 界面中为该项目选择的 Node 引擎的版本号。`nvm-desktop` 检测此文件以识别你项目的 Node 版本。
 
 ## 功能
 

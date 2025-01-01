@@ -212,50 +212,39 @@ The automatic check for updates feature of the application has supported all pla
 
 ## Develop and Build
 
-`nvm-desktop` relies on `nvmd-command` to provide intelligent identification of the correct Node engine service, so you need to build an executable file locally. How to build the executable for `nvm-desktop` please check this document: [build-nvmd-command](https://github.com/1111mp/nvmd-command#build-nvmd-command).
-
-- First, Build an executable for `nvm-desktop`.
-- Copy the executable to this directory of nvm-desktop:
-  - macOS `"./assets/sources/nvmd"`
-  - Windows `"./assets/sources/{arch}.exe"`, example: `"./assets/sources/x64.exe"` & `"./assets/sources/arm64.exe"`
-- On Windows platform, you also need to add an additional script file named `temp.cmd` in the `./assets/sources/temp.cmd` directory. The content of the `temp.cmd` file is:
-
-```shell
-@echo off
-"%~dpn0.exe" %*
-```
-
-Then you can start running and building `nvm-desktop` locally.
-
-Since version `v4.0.0`, we have migrated to `tauri`, so the above operation is no longer necessary. You can directly run the `pnpm check` command.
+- First, you should have a Rust runtime installed locally. Please read the official guide: [Rust Get Started](https://www.rust-lang.org/learn/get-started)
+- Then, make sure your computer has [Node.js](https://nodejs.org/) installed
 
 ### Development
 
-- First, you should have a Rust runtime installed locally. Please read the official guide: [rust get started](https://www.rust-lang.org/learn/get-started)
-- Then, make sure your computer has [Node.js](https://nodejs.org/) installed
-- Change to the `"./"` folder, run `pnpm install` to install dependented libraries
+Clone the project code to your local machine, navigate to the project’s root directory, and then run the following commands in the terminal:
+- `pnpm check`: Download the `nvmd` file to the `./src-tauri/resources/` directory.
+- `pnpm install`: Install the project dependencies.
 
 There are two ways to start the development server:
 
 - run `pnpm dev`
-- `F5` one-button start (debug mode)
+- `F5` one-button start (VSCode Debug Mode)
 
 ### Build and Package
 
-- Go to the ./ folder
-- Run `pnpm build`, if everything goes well, the packaged files will be in the `./src-tauri/target/release/bundle` folder.
+- Go to the `./` folder
+- Run `pnpm build`
+
+If everything goes well, the packaged files will be in the `./src-tauri/target/release/bundle` folder.
 
 ## Managing your project
 
-Now you can choose different Node versions individually for your projects and no need for any other dependencies and extra work.
+Now, you can select a different Node.js version for each project individually, without any additional dependencies or complex configurations. This feature is powered by nvmd-command, helping you maintain consistency and simplicity in your Node.js environment across multiple projects.
 
-This feature is enabled by `nvmd-command` support.
+With this feature, you can:
+- Choose a separate Node.js version for each project.
+- Automatically detect the `.nvmdrc` file in the project’s root directory to determine the appropriate Node version.
+- No need for manual configuration or additional tools, as `nvmd` will automatically recognize and switch to the required version.
+
+<img width="1636" alt="Screenshot 2025-01-01 at 10 25 22" src="https://github.com/user-attachments/assets/0638279b-86d2-4498-a299-c670fc4e963a" />
 
 For more details, please check the [nvmd-command](https://github.com/1111mp/nvmd-command) project.
-
-<img width="1660" alt="image" src="https://github.com/1111mp/nvm-desktop/assets/31227919/ac8653c4-5b40-447f-b10c-557907d101df">
-
-A file will be added to the root of the project: `.nvmdrc`, the content is the version number of Node you choose. `nvm-desktop` detects this file to identify the Node version for your project.
 
 ## Features
 
