@@ -1,6 +1,6 @@
 import '@/services/i18n';
 
-import React from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './app';
 
@@ -15,14 +15,14 @@ import { getSystemCurrentTheme } from '@/services/api';
  * The delay is always within `15ms` (in development)
  */
 (async () => {
-	const [settings, sysTheme] = await Promise.all([
-		getSettings(),
-		getSystemCurrentTheme(),
-	]);
+  const [settings, sysTheme] = await Promise.all([
+    getSettings(),
+    getSystemCurrentTheme(),
+  ]);
 
-	createRoot(document.getElementById('root') as HTMLElement).render(
-		<React.StrictMode>
-			<App settings={settings} sysTheme={sysTheme} />
-		</React.StrictMode>
-	);
+  createRoot(document.getElementById('root') as HTMLElement).render(
+    <StrictMode>
+      <App settings={settings} sysTheme={sysTheme} />
+    </StrictMode>,
+  );
 })();

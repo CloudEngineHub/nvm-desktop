@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import {
   DefMirrors,
   AutoComplete,
@@ -49,7 +49,7 @@ import { Closer, Themes } from '@/types';
 
 type Options = NonNullable<AutoCompleteProps['options']>;
 
-type Props = {};
+type Props = unknown;
 
 const formSchema = z.object({
   locale: z.string(),
@@ -90,7 +90,7 @@ const formSchema = z.object({
     }),
 });
 
-const Setting: React.FC<Props> = memo(() => {
+const Setting: React.FC<Props> = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -185,12 +185,12 @@ const Setting: React.FC<Props> = memo(() => {
           icon={<GearIcon />}
         />
       </SheetTrigger>
-      <SheetContent className='flex flex-col [overflow-y:overlay]'>
-        <SheetHeader>
+      <SheetContent className='flex flex-col p-0'>
+        <SheetHeader className='pt-6 px-6'>
           <SheetTitle>{t('Setting')}</SheetTitle>
           <SheetDescription></SheetDescription>
         </SheetHeader>
-        <div className='flex-1 space-y-6'>
+        <div className='flex-1 px-6 space-y-6 [overflow-y:overlay]'>
           <Form {...form}>
             <FormField
               control={form.control}
@@ -386,7 +386,7 @@ const Setting: React.FC<Props> = memo(() => {
               control={form.control}
               name='proxy'
               render={({ field }) => {
-                const { enabled } = field?.value;
+                const { enabled } = field.value;
 
                 return (
                   <FormItem>
@@ -471,7 +471,7 @@ const Setting: React.FC<Props> = memo(() => {
             />
           </Form>
         </div>
-        <SheetFooter>
+        <SheetFooter className='px-6 pb-6'>
           <SheetClose asChild>
             <Button variant='secondary'>{t('Cancel')}</Button>
           </SheetClose>
@@ -486,6 +486,8 @@ const Setting: React.FC<Props> = memo(() => {
       </SheetContent>
     </Sheet>
   );
-});
+};
+
+Setting.displayName = 'Setting';
 
 export default Setting;
