@@ -84,6 +84,7 @@ export const Updater: React.FC = () => {
   const onUpgrade = async () => {
     if (!updateInfo) return;
 
+    setLoading(true);
     setOpen({ visible: false, type: ModalType.Check });
 
     let downloaded = 0;
@@ -105,6 +106,7 @@ export const Updater: React.FC = () => {
           break;
         }
         case 'Finished': {
+          setLoading(false);
           setOpen({ visible: true, type: ModalType.Complete });
           break;
         }
