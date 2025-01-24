@@ -1,3 +1,18 @@
+## v4.0.6
+
+### Features
+
+- upgrading to react 19
+
+### Bug Fixes
+
+- set the theme in advance at startup to prevent flickering
+- correct usage of `tauri-plugin-window-state` [#147](https://github.com/1111mp/nvm-desktop/issues/147)
+- delegate `Ctrl+C` handling for shims [#156](https://github.com/1111mp/nvm-desktop/issues/156)
+- handle file read instead of silently exiting [#14](https://github.com/1111mp/nvmd-command/issues/14)
+
+---
+
 ## v4.0.5
 
 ### Bug Fixes
